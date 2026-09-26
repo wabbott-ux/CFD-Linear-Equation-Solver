@@ -1,0 +1,12 @@
+import numpy as np
+import random as rand
+with open("new_file.txt", "w") as csvfile:
+        for i in range(0,1000):
+            csvfile.write(str(rand.randint(0,100))+",")
+        csvfile.write("\n")
+        for i in range(0,1000):
+            csvfile.write(str(rand.randint(0,100))+",")
+        csvfile.write("\n")
+        for i in range(0,1000):
+            csvfile.write(str(rand.randint(0,100))+",")
+        csvfile.write("\n")
