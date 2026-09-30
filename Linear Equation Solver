@@ -1,0 +1,65 @@
+### Sparse Matrix Linear Equation Solver
+### Will Abbott, 1013944706, Assignment 1 Question 1
+
+### This code takes a specified csv file and converts it into a sparse matrix A and corresponding vector b.
+### The sparse matrix A is then solved based on the specified vector b to obtain a solution vector x.
+### This code assumes csv file is to be given in a specific order:
+### First row of csv file: values correspond to row indicies of non-zero entries of sparse matrix
+### Second row of csv file: values correspond to column indicies of non-zero entries of sparse matrix
+### Third row of csv file: values correspond to numerical value of non-zero entries of sparse matrix
+### Fourth row of csv file: values correspond to numerical value of vector entries
+
+
+import numpy as np
+from scipy.sparse import coo_array
+from scipy.sparse import csr_array
+from scipy.sparse.linalg import bicg
+from scipy.sparse.linalg import norm
+from scipy.sparse import lil_array
+from numpy.random import rand
+from random import randint
+import time
+
+print("Program Start")
+t_start = time.time()
+
+
+A_data = []
+A_row = []
+A_col = []
+b = []
+
+A_order = [A_row,A_col,A_data,b] #Initializing lists, ordering based on how they will be received from csv file
+
+counter = 0
+
+
+with open("Matrix A.csv") as my_file:
+    for line in my_file:
+        Mat = line.strip("\n").split(",") #reading line of data from csv file
+        for i in range(0,len(Mat)-1): #For each point of data in line
+                A_order[counter].append(int(Mat[i])) #Append data from csv file into appropriate list (row, column, etc)
+        counter += 1
+        
+N = len(b) #Order of matrix specified by input vector
+
+A = coo_array((np.array(A_data),(np.array(A_row),np.array(A_col))),shape=(N,N)) #Create matrix A of size NxN
+
+t_solve = time.time()
+print(f"Setup finished in {round(t_solve-t_start,2)} seconds")
+print(f"Starting Matrix Calculation")
+
+x = bicg(A, b) #Solves Ax = b
+r = norm(A@csr_array(x[0]) - csr_array(b)) #Calculate residual
+t_finish = time.time()
+
+print(f"Finished in {round(t_finish-t_solve,2)} seconds")
+print(f"Residual of Ax - b = {r}")
+
+p = A@csr_array(x[0]) - csr_array(b) #provides measure of how accurate the computed solution is
+
+print(p)
+
+
+    
+        
